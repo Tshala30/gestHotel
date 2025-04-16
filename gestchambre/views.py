@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import Client,Chambre #
 def liste_clients(request):
     clients = Client.objects.all() #
@@ -7,14 +7,13 @@ def liste_chambre(request):
     chambre = Chambre.objects.all() #
     return render(request,'chambre/liste_chambre.html',{'chambre': chambre}) #
 def ajouter_chambre(request):
-    if request.method == 'POST' :
-        form = chambreFrom(resquest.POST)
-    if form.is_valid():
-        form.save() #
-        return redirect('liste_chambre') #
-    else:
-        form = ChambreForm()
-        return render(request, 'chambre/ajouter_chambre.html',{'form':form})
+    numero = request.data.get("numero")
+    nom = request.data.get("nom")
+    type = request.data.get("type")
+    chambre = Chambre.objects.create(
+        numero=numero,
+    )
+    return render(request, 'chambre/ajouter_chambre.html',{'form':form})
 def modifier_chambre(request, pk):
     chambre = get_objet_or_404(chambre, pk=pk)
     if request.method == 'POST':
